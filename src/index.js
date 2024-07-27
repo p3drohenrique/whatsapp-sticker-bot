@@ -21,7 +21,7 @@ const debug = process.env.DEBUG === "TRUE" ? true : false;
     if (message.type === "image" && message.hasMedia) {
       const chat = await message.getChat();
       if (debug) console.log("CHAT: ", chat);
-      if (chat.name === groupName && chat.isGroup) {
+      if (chat?.name === groupName && chat.isGroup) {
         const image = await message.downloadMedia();
         if (image) {
           await chat.sendMessage(image, {

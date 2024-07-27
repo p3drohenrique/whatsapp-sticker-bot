@@ -16,6 +16,6 @@
   },
   "dependencies": {
     "dotenv": "^16.4.1",
-    "whatsapp-puppeteer": "^1.0.4"
+    "whatsapp-puppeteer": "^1.0.5"
   }
 }
