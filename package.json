@@ -1,17 +1,21 @@
 {
   "name": "whatsapp-sticker-bot",
   "version": "1.0.0",
-  "description": "",
+  "description": "Simple Whatsapp sticker bot",
+  "keywords": [
+    "whatsapp",
+    "sticker-bot",
+    "whatsapp-sticker-bot",
+    "bot"
+  ],
+  "author": "Pedro H.",
+  "license": "MIT",
   "main": "src/index.js",
   "scripts": {
     "start": "node ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "dotenv": "^16.4.1",
-    "qrcode-terminal": "^0.12.0",
-    "whatsapp-web.js": "^1.23.0"
+    "whatsapp-puppeteer": "^1.0.4"
   }
 }

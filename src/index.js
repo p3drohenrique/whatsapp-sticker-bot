@@ -1,33 +1,35 @@
-require('dotenv/config');
-const { Client, LocalAuth } = require('whatsapp-web.js');
-const qrcodeTerminal = require('qrcode-terminal');
+require("dotenv/config");
+const { WhatsappPuppeteer } = require("whatsapp-puppeteer");
 
-const client = new Client({
-  authStrategy: new LocalAuth(),
-});
+const groupName = process.env.GROUP_NAME || "";
+const debug = process.env.DEBUG === "TRUE" ? true : false;
 
-client.on('qr', qrCode => {
-  console.log('Whatsapp QRCode:');
-  qrcodeTerminal.generate(qrCode, { small: true });
-});
+(async () => {
+  console.log("Iniciando Whatsapp sticker bot");
+  console.log("Group name: ", groupName);
+  console.log("Debug: ", debug);
 
-client.on('ready', () => console.log('Conectou!'));
+  const whatsappPuppeteer = new WhatsappPuppeteer();
 
-client.on('message_create', async message => {
-  if (message.from !== process.env.CONTACT_ID) return;
-  if (message.type !== 'image') return;
-  if (!message.hasMedia) return;
-
-  const chat = await message.getChat();
-  if (!chat.isGroup) return;
-  if (chat.name?.trim() !== 'Sticker Bot') return;
-  const image = await message.downloadMedia();
-  const stickerMessage = await chat.sendMessage(image, { 
-    sendMediaAsSticker: true,
-    stickerAuthor: '🤖 Sticker Bot - ☠️ Pedro H.',
+  await whatsappPuppeteer.initialize({
+    headless: !debug,
+    showQrCodeTerminal: true,
   });
-  await new Promise(resolve => setTimeout(() => resolve(), 1000 * 5));
-  await stickerMessage.star();
-});
 
-client.initialize();
+  whatsappPuppeteer.on("newMessage", async (message) => {
+    if (debug) console.log("MESSAGE: ", message);
+    if (message.type === "image" && message.hasMedia) {
+      const chat = await message.getChat();
+      if (debug) console.log("CHAT: ", chat);
+      if (chat.name === groupName && chat.isGroup) {
+        const image = await message.downloadMedia();
+        if (image) {
+          await chat.sendMessage(image, {
+            sticker: true,
+            stickerAuthor: "🤖 Sticker Bot - ☠️ Pedro H.",
+          });
+        }
+      }
+    }
+  });
+})();

@@ -1,0 +1,8 @@
+services:
+  whatsapp-sticker-bot:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: whatsapp-sticker-bot
+    container_name: whatsapp-sticker-bot
+    env_file: ./.env
